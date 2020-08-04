@@ -2,6 +2,7 @@ from random import randrange
 
 class Block:
     squares = []
+    # sets random block
     def __init__(self):
         self.type = randrange(6)
         if self.type == 0:

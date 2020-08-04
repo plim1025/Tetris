@@ -13,8 +13,11 @@ class Grid:
         self.map = [[' ']*cols for i in range(self.rows)]
     
     def printGrid(self):
+        # clear screen
         os.system('cls' if os.name == 'nt' else 'clear')
+        # print score
         print('Score: ' + str(self.score))
+        # print grid
         for i in range(self.rows):
             for j in range(self.cols):
                 print('|' + self.map[i][j], end = '')
@@ -26,6 +29,7 @@ class Grid:
         self.curBlock = []
         self.curBlockType = Block.type
         self.curBlockRotation = 1
+        # check if spawned block is valid, if not game over, else spawn block
         for square in Block.squares:
             self.curBlock.append(square)
             if self.map[square[0]][square[1]] != ' ':
@@ -49,6 +53,7 @@ class Grid:
                 return False
         return True
 
+    # checks whether or not block can be dropped one square
     def validDrop(self) -> bool:
         testBlock = []
         for square in self.curBlock:
@@ -57,6 +62,7 @@ class Grid:
             testBlock.append([row+1, col])
         return self.validBlock(testBlock)
 
+    # checks whether or not block can move left or right
     def validMove(self, move) -> bool:
         testBlock = []
         for square in self.curBlock:
@@ -68,6 +74,7 @@ class Grid:
                 testBlock.append([row, col-1])
         return self.validBlock(testBlock)
     
+    # checks whether or not block can be rotated
     def validRotate(self) -> bool:
         testBlock = []
         if self.curBlockType == 0:
@@ -147,7 +154,7 @@ class Grid:
                 testBlock.append([self.curBlock[2][0], self.curBlock[2][1]+1])
         return self.validBlock(testBlock)
 
-
+    # drops block one square
     def dropBlock(self, keyPressed = None) -> bool:
         if not self.validDrop():
             validAdd = self.addBlock(Block())
@@ -164,6 +171,7 @@ class Grid:
         self.printGrid()
         return True
 
+    # moves block left or right one square
     def moveBlock(self, keyPressed):
         move = 'right' if str(keyPressed) == 'KeyboardEvent(right down)' else 'left'
         if self.validMove(move):
@@ -175,19 +183,22 @@ class Grid:
                     self.curBlock[i][1] -= 1
             self.addCurBlockToMap()
             self.printGrid()
-        
+    
+    # deletes current block from map
     def deleteCurBlockFromMap(self):
         for square in self.curBlock:
             row = square[0]
             col = square[1]
             self.map[row][col] = ' '
 
+    # adds current block to map
     def addCurBlockToMap(self):
         for square in self.curBlock:
             row = square[0]
             col = square[1]
             self.map[row][col] = '\u2588'
 
+    # rotates current block
     def rotateBlock(self, keyPressed):
         if self.validRotate():
             self.deleteCurBlockFromMap()
@@ -257,7 +268,7 @@ class Grid:
             self.addCurBlockToMap()
             self.printGrid()
 
-    
+    # deletes full rows
     def deleteFullRows(self):
         rows = len(self.map)
         cols = len(self.map[0])
