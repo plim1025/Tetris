@@ -33,8 +33,8 @@ class Grid:
         for square in block:
             row = square[0]
             col = square[1]
-            # goes below map
-            if row >= len(self.map):
+            # goes below map or above map
+            if row >= len(self.map) or row < 0:
                 return False
             # goes off edge of left or right of map
             if col >= len(self.map[0]) or col < 0:
@@ -76,13 +76,70 @@ class Grid:
                 testBlock.append([self.curBlock[1][0], self.curBlock[1][1]-1])
                 testBlock.append([self.curBlock[1][0], self.curBlock[1][1]+1])
                 testBlock.append([self.curBlock[1][0], self.curBlock[1][1]+2])
-        # elif self.curBlockType == 1:
-
-    #     elif self.curBlockType == 2:
-
-    #     elif self.curBlockType == 3:
-        
-    #     elif self.curBlockType == 4:
+        elif self.curBlockType == 1:
+            if self.curBlockRotation == 1:
+                testBlock.append(self.curBlock[1])
+                testBlock.append(self.curBlock[2])
+                testBlock.append([self.curBlock[0][0]-2, self.curBlock[0][1]])
+                testBlock.append([self.curBlock[0][0]-1, self.curBlock[0][1]])
+            elif self.curBlockRotation == 2:
+                testBlock.append(self.curBlock[1])
+                testBlock.append(self.curBlock[2])
+                testBlock.append([self.curBlock[1][0], self.curBlock[1][1]-1])
+                testBlock.append([self.curBlock[2][0], self.curBlock[2][1]+1])
+        elif self.curBlockType == 2:
+            if self.curBlockRotation == 1:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[3][0], self.curBlock[3][1]+1])
+                testBlock.append([self.curBlock[3][0]-1, self.curBlock[3][1]+1])
+            elif self.curBlockRotation == 2:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[1][0]+1, self.curBlock[1][1]])
+                testBlock.append([self.curBlock[1][0], self.curBlock[1][1]-2])
+        elif self.curBlockType == 3:
+            if self.curBlockRotation == 1:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[1])
+                testBlock.append([self.curBlock[0][0], self.curBlock[0][1]+1])
+                testBlock.append([self.curBlock[1][0]-1, self.curBlock[1][1]])
+            elif self.curBlockRotation == 2:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[2])
+                testBlock.append([self.curBlock[0][0], self.curBlock[0][1]-1])
+                testBlock.append([self.curBlock[2][0]-1, self.curBlock[2][1]])
+            elif self.curBlockRotation == 3:
+                testBlock.append(self.curBlock[2])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[3][0]-1, self.curBlock[3][1]])
+                testBlock.append([self.curBlock[3][0]-1, self.curBlock[3][1]-1])
+            elif self.curBlockRotation == 4:
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[3][0], self.curBlock[3][1]-1])
+                testBlock.append([self.curBlock[3][0], self.curBlock[3][1]+1])
+                testBlock.append([self.curBlock[3][0]+1, self.curBlock[3][1]-1])
+        elif self.curBlockType == 4:
+            if self.curBlockRotation == 1:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[2])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[2][0]-1, self.curBlock[2][1]])
+            elif self.curBlockRotation == 2:
+                testBlock.append(self.curBlock[1])
+                testBlock.append(self.curBlock[2])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[2][0], self.curBlock[2][1]-1])
+            elif self.curBlockRotation == 3:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[1])
+                testBlock.append(self.curBlock[2])
+                testBlock.append([self.curBlock[2][0]+1, self.curBlock[2][1]])
+            elif self.curBlockRotation == 4:
+                testBlock.append(self.curBlock[0])
+                testBlock.append(self.curBlock[2])
+                testBlock.append(self.curBlock[3])
+                testBlock.append([self.curBlock[2][0], self.curBlock[2][1]+1])
         return self.validBlock(testBlock)
 
 
@@ -140,6 +197,57 @@ class Grid:
                     self.curBlock[0] = [self.curBlock[1][0], self.curBlock[1][1]-1]
                     self.curBlock[2] = [self.curBlock[1][0], self.curBlock[1][1]+1]
                     self.curBlock[3] = [self.curBlock[1][0], self.curBlock[1][1]+2]
-                    self.curBlockRotation = 1      
+                    self.curBlockRotation = 1
+            elif self.curBlockType == 1:
+                if self.curBlockRotation == 1:
+                    self.curBlock[0] = [self.curBlock[0][0]-1, self.curBlock[0][1]]
+                    self.curBlock[3] = [self.curBlock[0][0]-1, self.curBlock[0][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 2:
+                    self.curBlock[0] = [self.curBlock[1][0], self.curBlock[1][1]-1]
+                    self.curBlock[3] = [self.curBlock[2][0], self.curBlock[2][1]+1]
+                    self.curBlockRotation = 1
+            elif self.curBlockType == 2:
+                if self.curBlockRotation == 1:
+                    self.curBlock[1] = [self.curBlock[3][0], self.curBlock[3][1]+1]
+                    self.curBlock[2] = [self.curBlock[3][0]-1, self.curBlock[3][1]+1]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 2:
+                    self.curBlock[1] = [self.curBlock[1][0]+1, self.curBlock[1][1]]
+                    self.curBlock[2] = [self.curBlock[3][0], self.curBlock[3][1]-1]
+                    self.curBlockRotation = 1
+            elif self.curBlockType == 3:
+                if self.curBlockRotation == 1:
+                    self.curBlock[2] = [self.curBlock[0][0], self.curBlock[0][1]+1]
+                    self.curBlock[3] = [self.curBlock[1][0]-1, self.curBlock[1][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 2:
+                    self.curBlock[1] = [self.curBlock[0][0], self.curBlock[0][1]-1]
+                    self.curBlock[3] = [self.curBlock[2][0]-1, self.curBlock[2][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 3:
+                    self.curBlock[0] = [self.curBlock[3][0]-1, self.curBlock[3][1]]
+                    self.curBlock[1] = [self.curBlock[3][0]-1, self.curBlock[3][1]-1]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 4:
+                    self.curBlock[0] = [self.curBlock[3][0]+1, self.curBlock[3][1]-1]
+                    self.curBlock[1] = [self.curBlock[3][0], self.curBlock[3][1]-1]
+                    self.curBlock[2] = [self.curBlock[3][0], self.curBlock[3][1]+1]
+                    self.curBlockRotation = 1
+            elif self.curBlockType == 4:
+                if self.curBlockRotation == 1:
+                    self.curBlock[1] = [self.curBlock[2][0]-1, self.curBlock[2][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 2:
+                    self.curBlock[0] = [self.curBlock[2][0], self.curBlock[2][1]-1]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 3:
+                    self.curBlock[3] = [self.curBlock[2][0]+1, self.curBlock[2][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 4:
+                    self.curBlock[0] = [self.curBlock[2][0]+1, self.curBlock[2][1]]
+                    self.curBlock[1] = [self.curBlock[2][0], self.curBlock[2][1]-1]
+                    self.curBlock[3] = [self.curBlock[2][0], self.curBlock[2][1]+1]
+                    self.curBlockRotation = 1
             self.addCurBlockToMap()
             self.printGrid()
