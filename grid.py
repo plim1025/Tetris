@@ -45,43 +45,45 @@ class Grid:
         return True
 
     def validDrop(self) -> bool:
+        testBlock = []
         for square in self.curBlock:
             row = square[0]
             col = square[1]
-            if len(self.map) - 1 == row:
-                return False
-            if self.map[row+1][col] != ' ' and [row+1, col] not in self.curBlock:
-                return False
-        return True
+            testBlock.append([row+1, col])
+        return self.validBlock(testBlock)
 
     def validMove(self, move) -> bool:
+        testBlock = []
         for square in self.curBlock:
             row = square[0]
             col = square[1]
-            if move == 'right' and len(self.map[0]) - 1 == col:
-                return False
-            if move == 'left' and col == 0:
-                return False
-            if move == 'right' and self.map[row][col+1] != ' ' and [row, col+1] not in self.curBlock:
-                return False
-            if move == 'left' and self.map[row][col-1] != ' ' and [row, col-1] not in self.curBlock:
-                return False
-        return True
+            if move == 'right':
+                testBlock.append([row, col+1])
+            if move == 'left':
+                testBlock.append([row, col-1])
+        return self.validBlock(testBlock)
     
     def validRotate(self) -> bool:
+        testBlock = []
         if self.curBlockType == 0:
             if self.curBlockRotation == 1:
-                self.map
-                self.curBlockRotation += 1
+                testBlock.append(self.curBlock[1])
+                testBlock.append([self.curBlock[1][0]-1, self.curBlock[1][1]])
+                testBlock.append([self.curBlock[1][0]+1, self.curBlock[1][1]])
+                testBlock.append([self.curBlock[1][0]+2, self.curBlock[1][1]])
             elif self.curBlockRotation == 2:
-                self.curBlockRotation = 1
-    #     elif self.curBlockType == 1:
+                testBlock.append(self.curBlock[1])
+                testBlock.append([self.curBlock[1][0], self.curBlock[1][1]-1])
+                testBlock.append([self.curBlock[1][0], self.curBlock[1][1]+1])
+                testBlock.append([self.curBlock[1][0], self.curBlock[1][1]+2])
+        # elif self.curBlockType == 1:
 
     #     elif self.curBlockType == 2:
 
     #     elif self.curBlockType == 3:
         
     #     elif self.curBlockType == 4:
+        return self.validBlock(testBlock)
 
 
     def dropBlock(self, keyPressed = None) -> bool:
@@ -91,10 +93,10 @@ class Grid:
                 self.printGrid()
                 return False
         else:
+            self.deleteCurBlockFromMap()
             for i in range(len(self.curBlock)):
                 row = self.curBlock[i][0]
                 col = self.curBlock[i][1]
-                self.map[row][col] = ' '
                 self.map[row+1][col] = '\u2588'
                 self.curBlock[i][0] += 1
         self.printGrid()
@@ -103,18 +105,41 @@ class Grid:
     def moveBlock(self, keyPressed):
         move = 'right' if str(keyPressed) == 'KeyboardEvent(right down)' else 'left'
         if self.validMove(move):
+            self.deleteCurBlockFromMap()
             for i in range(len(self.curBlock)):
-                row = self.curBlock[i][0]
-                col = self.curBlock[i][1]
-                self.map[row][col] = ' '
                 if move == 'right':
                     self.curBlock[i][1] += 1
                 elif move == 'left':
                     self.curBlock[i][1] -= 1
-            for square in self.curBlock:
-                row = square[0]
-                col = square[1]
-                self.map[row][col] = '\u2588'
+            self.addCurBlockToMap()
             self.printGrid()
         
-    # def rotateBlock(self, keyPressed):
+    def deleteCurBlockFromMap(self):
+        for square in self.curBlock:
+            row = square[0]
+            col = square[1]
+            self.map[row][col] = ' '
+
+    def addCurBlockToMap(self):
+        for square in self.curBlock:
+            row = square[0]
+            col = square[1]
+            self.map[row][col] = '\u2588'
+
+    def rotateBlock(self, keyPressed):
+        if self.validRotate():
+            self.deleteCurBlockFromMap()
+            if self.curBlockType == 0:
+                if self.curBlockRotation == 1:
+                    self.curBlock[0] = [self.curBlock[1][0]-1, self.curBlock[1][1]]
+                    self.curBlock[2] = [self.curBlock[1][0]+1, self.curBlock[1][1]]
+                    self.curBlock[3] = [self.curBlock[1][0]+2, self.curBlock[1][1]]
+                    self.curBlockRotation += 1
+                elif self.curBlockRotation == 2:
+                    self.deleteCurBlockFromMap()
+                    self.curBlock[0] = [self.curBlock[1][0], self.curBlock[1][1]-1]
+                    self.curBlock[2] = [self.curBlock[1][0], self.curBlock[1][1]+1]
+                    self.curBlock[3] = [self.curBlock[1][0], self.curBlock[1][1]+2]
+                    self.curBlockRotation = 1      
+            self.addCurBlockToMap()
+            self.printGrid()
