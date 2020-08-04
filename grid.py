@@ -5,14 +5,16 @@ class Grid:
     curBlock = []
     curBlockType = 0
     curBlockRotation = 1
+    score = 0
+    tetris = False
     def __init__(self, cols: int, rows: int):
         self.cols = cols
         self.rows = rows
         self.map = [[' ']*cols for i in range(self.rows)]
     
     def printGrid(self):
-        self.deleteFullRows()
         os.system('cls' if os.name == 'nt' else 'clear')
+        print('Score: ' + str(self.score))
         for i in range(self.rows):
             for j in range(self.cols):
                 print('|' + self.map[i][j], end = '')
@@ -20,6 +22,7 @@ class Grid:
         print('\n')
 
     def addBlock(self, Block):
+        self.deleteFullRows()
         self.curBlock = []
         self.curBlockType = Block.type
         self.curBlockRotation = 1
@@ -275,5 +278,8 @@ class Grid:
                     if self.map[row][col] != ' ':
                         newMap[row+1][col] = '\u2588'
             for row in range(i+1, rows):
-                newMap[row][col] = self.map[row][col]
+                for col in range(cols):
+                    newMap[row][col] = self.map[row][col]
             self.map = newMap
+    
+        self.score += len(rowsToDelete)

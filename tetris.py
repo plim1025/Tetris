@@ -16,9 +16,3 @@ while True:
         break
     setTimeout(lambda: None, 1)
 print('Game over')
-
-
-# delete lines when full
-# add TETRIS when delete 4 lines at once
-# add score board
-# add comments
