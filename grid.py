@@ -11,6 +11,7 @@ class Grid:
         self.map = [[' ']*cols for i in range(self.rows)]
     
     def printGrid(self):
+        self.deleteFullRows()
         os.system('cls' if os.name == 'nt' else 'clear')
         for i in range(self.rows):
             for j in range(self.cols):
@@ -21,6 +22,7 @@ class Grid:
     def addBlock(self, Block):
         self.curBlock = []
         self.curBlockType = Block.type
+        self.curBlockRotation = 1
         for square in Block.squares:
             self.curBlock.append(square)
             if self.map[square[0]][square[1]] != ' ':
@@ -251,3 +253,27 @@ class Grid:
                     self.curBlockRotation = 1
             self.addCurBlockToMap()
             self.printGrid()
+
+    
+    def deleteFullRows(self):
+        rows = len(self.map)
+        cols = len(self.map[0])
+        rowsToDelete = []
+        for i in range(rows):
+            squaresFilled = 0
+            for j in range(cols):
+                if self.map[i][j] == ' ':
+                    break
+                squaresFilled += 1
+            if squaresFilled == cols:
+                rowsToDelete.append(i)
+
+        for i in rowsToDelete:
+            newMap = [[' ']*cols for i in range(rows)]
+            for row in range(i):
+                for col in range(cols):
+                    if self.map[row][col] != ' ':
+                        newMap[row+1][col] = '\u2588'
+            for row in range(i+1, rows):
+                newMap[row][col] = self.map[row][col]
+            self.map = newMap

@@ -18,7 +18,6 @@ while True:
 print('Game over')
 
 
-# add rotation
 # delete lines when full
 # add TETRIS when delete 4 lines at once
 # add score board
